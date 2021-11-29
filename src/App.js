@@ -1,24 +1,43 @@
-import logo from './logo.svg';
+import { createContext, useEffect, useState } from 'react';
 import './App.css';
+import { Cart } from './components/cart';
+import { Header } from './components/header';
+import { Images } from './components/images';
+import { Menu } from './components/menu';
+import { Product } from './components/product';
+
+export const valuesContext = createContext(null);
 
 function App() {
+  const [units, setUnits] = useState(0);
+  const [unitsCart, setUnitsCart] = useState(0);
+  const [showMenu, setShowMenu] = useState(false);
+  const [menuStyle, setMenuStyle] = useState('');
+  const [showCart,setShowCart] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(()=>{
+    
+    function handleResize(){
+      // console.log('Resize to: ', window.innerWidth, 'x', window.innerHeight)
+      window.innerWidth > 768 ? setIsMobile(false) : setIsMobile(true);
+    }
+    window.addEventListener('resize', handleResize)
+    
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <valuesContext.Provider value = {{units,setUnits,showMenu,setShowMenu, menuStyle,setMenuStyle, unitsCart,setUnitsCart, showCart,setShowCart, isMobile,setIsMobile}}>
+      <div className="App">
+        <div className="container">
+          {showMenu && <Menu/>}
+          {showCart && <Cart/>}
+          <Header/>
+          <Images/>
+          <Product/>
+        </div>
+      </div>
+    </valuesContext.Provider>
   );
 }
 
